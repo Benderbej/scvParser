@@ -44,58 +44,52 @@ object ParserApp extends App {
 
   def parseFileToSeq = {
 
-
-    def addChilds(str: String, childs: List[String], curNode: Organisation) = {
-
-      curNode.childList match {
-        case Nil =>
-        case
-      }
-
-
-    }
-
-
-
+//    def addChilds(str: String, childs: List[String], curNode: Organisation) = {
+//
+//      curNode.childList match {
+//        case Nil =>
+//        case
+//      }
+//
+//
+//    }
 
     val buffered = getCSVsrc
+    var list: List[List[String]] = List()
 //    val bufferedWithoutHeader = buffered.
     for (line <- buffered.getLines) {
 
-      val cols: Seq[String] = line.split(",").map(_.trim).toList
+      val cols: Seq[String] = line.split(delimiter).map(_.trim).toList
       cols match {
-        case x :: "" :: tail => x.addToRoot(tail)
-        case x :: "" :: "" => x.addToRootNoChilds(tail)
-        case x :: y :: "" => y.addChildToRoot(x)
-        case x :: y :: tail => x.addToRoot(List(y)); addChilds(x, tail, )
-        //case _ exception -error in format
-      }
+        case x :: y :: Nil => list = list.appended(x :: y :: Nil)
+        case x :: y :: z :: Nil =>
+          val chList: List[String] = z.split("\\|").toList
+//          println(chList)
+//          println(chList.prepended(y).prepended(x))
+          list = list.appended(chList.prepended(y).prepended(x))
+        case _ => throw new IllegalArgumentException("invalid format")
 
-
-      val name = s"${cols(0)}"
-      val parent = s"${cols(1)}"
-
-
-      val children: Set[Organisation] = {
-
-
-
-        println(s"${cols(1)}")
       }
     }
     buffered.close
+    list
   }
 
+//  def findAndAddChild
+//
+//  def getAllRootOrganisations = ???
+//
+//  def getHierarchyByRootOrgName = ???
+//
+//  def parseLine = ???
 
-  def findAndAddChild
-
-
-  def getAllRootOrganisations = ???
-
-  def getHierarchyByRootOrgName = ???
-
-  def parseLine = ???
-
-  parseFileToSeq
+  println(parseFileToSeq)
 
 }
+//cols match {
+//  case x :: "" :: tail => x.addToRoot(tail)
+//  case x :: "" :: "" => x.addToRootNoChilds(tail)
+//  case x :: y :: "" => y.addChildToRoot(x)
+//  case x :: y :: tail => x.addToRoot(List(y)); addChilds(x, tail, )
+//  //case _ exception -error in format
+//}
