@@ -26,20 +26,69 @@ object ParserApp extends App {
 
   val delimiter = ","
   val orgDelimiter = "|"
+  val orgSet: Set[Organisation] = Set()
 
-  def getCSVsrc = ???
+  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
+
+//  def parseFileToSeq = {
+//    val buffered = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
+//    for (line <- buffered.getLines) {
+//      val cols = line.split(",").map(_.trim)
+//      val name = s"${cols(0)}"
+//      val parent = s"${cols(1)}"
+//      val children =
+//        println(s"${cols(1)}")
+//    }
+//    buffered.close
+//  }
 
   def parseFileToSeq = {
-    val buffered = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
+
+
+    def addChilds(str: String, childs: List[String], curNode: Organisation) = {
+
+      curNode.childList match {
+        case Nil =>
+        case
+      }
+
+
+    }
+
+
+
+
+    val buffered = getCSVsrc
+//    val bufferedWithoutHeader = buffered.
     for (line <- buffered.getLines) {
-      val cols = line.split(",").map(_.trim)
+
+      val cols: Seq[String] = line.split(",").map(_.trim).toList
+      cols match {
+        case x :: "" :: tail => x.addToRoot(tail)
+        case x :: "" :: "" => x.addToRootNoChilds(tail)
+        case x :: y :: "" => y.addChildToRoot(x)
+        case x :: y :: tail => x.addToRoot(List(y)); addChilds(x, tail, )
+        //case _ exception -error in format
+      }
+
+
       val name = s"${cols(0)}"
       val parent = s"${cols(1)}"
-      val children =
+
+
+      val children: Set[Organisation] = {
+
+
+
         println(s"${cols(1)}")
+      }
     }
     buffered.close
   }
+
+
+  def findAndAddChild
+
 
   def getAllRootOrganisations = ???
 

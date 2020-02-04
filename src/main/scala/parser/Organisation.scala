@@ -1,3 +1,7 @@
 package parser
 
-case class Organisation()
+case class Organisation(name: String) {
+
+  val childList: List[Organisation] = List()
+
+}
