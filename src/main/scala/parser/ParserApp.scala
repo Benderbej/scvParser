@@ -93,8 +93,6 @@ object ParserApp extends App {
                 .concat(Set(RootOrganisation(name)))
             )
           }
-//          case name :: "" =>
-//            trasformData(tail, res.concat(Set(RootOrganisation(name)))) //root without childs
           case name :: parent :: Nil =>
             trasformData(
               tail,
@@ -107,6 +105,8 @@ object ParserApp extends App {
                 .concat(Set(NotRootOrganisation(name, parent)))
                 .concat(getSetFromChildsList(childs, name))
             ) //node with childs
+          case name :: "" :: Nil =>
+            trasformData(tail, res.concat(Set(RootOrganisation(name)))) //root without childs
 
         }
 //        trasformData(tail, res)
