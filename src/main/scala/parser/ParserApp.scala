@@ -40,7 +40,7 @@ object ParserApp extends App {
       cols match {
         case x :: y :: Nil => list = list.appended(x :: y :: Nil)
         case x :: y :: z :: Nil =>
-          val chList: List[String] = z.split(orgDelimiter).toList
+          val chList: List[String] = z.split(orgDelimiter).toList //TODO tolist remove set toset
           list = list.appended(chList.prepended(y).prepended(x))
         case _ => throw new IllegalArgumentException("invalid format")
       }
@@ -49,43 +49,23 @@ object ParserApp extends App {
     list
   }
 
-  def trasformData(src: List[List[String]], res: Set[Organisation]): Set[
-    Organisation
-  ] = { //we know that this root exists and look for it to add new node
 
-//    def addOrganisationToSet(orgSet: Set[Organisation], parOrgName: String, chOrgName: String): Set[Organisation] = {
-////      if(orgSet.)
-//      for {
-//        org <- orgSet
-//
-//        if org.name != parOrgName
-//
-//      } println(orgName) //yield s
-//      s match {
-//        case
-//        case
-//      }
-//    }
+  def trasformData(src: List[List[String]],
+                   res: Set[Organisation]): Set[Organisation] = {
 
     def getSetFromChildsList(childs: List[String],
                              parName: String): Set[Organisation] = {
       val r = for {
         c <- childs
       } yield NotRootOrganisation(c, parName)
-      r.toSet
+      r.toSet //TODO remove
     }
 
     src match {
-
       case Nil => res
       case head :: tail => {
-
         head match {
-          case name :: "" :: childs => { //root with childs
-//            val orgs = for {
-//              c <- childs
-//            } yield NotRootOrganisation(c, name)
-//            val orgs = getSetFromChildsList(childs, name)
+          case name :: "" :: childs => {
             trasformData(
               tail,
               res
@@ -97,33 +77,102 @@ object ParserApp extends App {
             trasformData(
               tail,
               res.concat(Set(NotRootOrganisation(name, parent)))
-            ) //node without childs
+            )
           case name :: parent :: childs =>
             trasformData(
               tail,
               res
                 .concat(Set(NotRootOrganisation(name, parent)))
                 .concat(getSetFromChildsList(childs, name))
-            ) //node with childs
+            )
           case name :: "" :: Nil =>
-            trasformData(tail, res.concat(Set(RootOrganisation(name)))) //root without childs
-
+            trasformData(tail, res.concat(Set(RootOrganisation(name))))
         }
-//        trasformData(tail, res)
       }
-
     }
+  }
+
+  def getAllRootOrganisations(orgs: Set[Organisation]) = {
+      (for (o <- orgs)
+        yield
+          o match {
+            case org: RootOrganisation => org;
+            case _                     =>
+          }).toList
+  }
+
+  def getHierarchyByRootOrgName(orgs: Set[Organisation], name: String) = {
+
+    for (o <- orgs; if o.name == name; if) yield o
 
   }
 
-//  def
-//
-//
-//  def findAndAddChild = ???
-//
-//  def getAllRootOrganisations = ???
-//
-//  def getHierarchyByRootOrgName = ???
+
+
+
+  def constrHier(s: Set[Organisation]) = {
+
+
+
+    def addChilds(curParName: String, organisation: Organisation): Organisation ={
+      val l: List[Organisation] = List()
+      for (
+          o <- s
+      ) o match {
+        case NotRootOrganisation(name, parent) => if(parent == curParName){
+          organisation.childList.appended(addChilds(name, NotRootOrganisation(name, parent)))
+        }
+      }
+    }
+
+
+
+
+
+
+
+    addChilds()
+
+
+
+  }
+
+
+
+
+
+  def getSublist(node: Organisation) = {
+
+
+
+
+
+
+
+
+
+    node match {
+
+       case org: NotRootOrganisation => {
+
+         if(org.parName == parname){
+
+         }
+
+
+
+       }
+
+
+
+
+    }
+
+
+
+
+  }
+
 //
 //  def parseLine = ???
 
@@ -131,11 +180,7 @@ object ParserApp extends App {
 
   println(trasformData(parseFileToSeq, Set()))
 
+  println(getAllRootOrganisations(trasformData(parseFileToSeq, Set())))
+  //lazy vals
+
 }
-//cols match {
-//  case x :: "" :: tail => x.addToRoot(tail)
-//  case x :: "" :: "" => x.addToRootNoChilds(tail)
-//  case x :: y :: "" => y.addChildToRoot(x)
-//  case x :: y :: tail => x.addToRoot(List(y)); addChilds(x, tail, )
-//  //case _ exception -error in format
-//}
