@@ -116,15 +116,16 @@ object ParserApp extends App {
 
     def addChilds(organisation: Organisation): Organisation ={
 //      val childs: List[Organisation] = List()
-      for (
+      (for (
           o <- s
+
       ) o match {
         case org: NotRootOrganisation => if(org.parName == organisation.name){
           organisation.childList.appended(addChilds(org))
         }
 //        case org: RootOrganisation => if(org.name == startOrg)
 //        case _ => organisation
-      }
+      }).
     }
 
 
