@@ -110,46 +110,34 @@ object ParserApp extends App {
   }
 
 //  def getHierarchyByRootOrgName(orgs: Set[Organisation], name: String) = {
-//
-//    for (o <- orgs; if o.name == name; if) yield o
-//
-//  }
 
-//  def constrHier(s: Set[Organisation], startOrg: String) = {
-//
-////  val startName = s.
-//
-//    def addChilds(orgSet: Set[Organisation], organisation: Organisation): Organisation = {
-//
-////      if (s.contains(NotRootOrganisation(organisation.name, _))){
-//
-//      orgSet.head match {
-//
-//        case org: NotRootOrganisation => if (org.parName == organisation.name){
-//
-//          val l = organisation.childList.appended(addChilds(orgSet.tail, org))
-//          NotRootOrganisation(org.name, org.parName, l)
-//        } else {
-//
-//        }
-//        case org: RootOrganisation => addChilds(orgSet.tail, )
-//
-//
-//      }
-//
-//
-////      for (o <- s
-////           if o.parName == organisation.name)
-////        organisation.childList.appended(addChilds(o))
-//
-////      }
-//
-//    }
-//    addChilds(s, RootOrganisation(startOrg))
-//  }
+  def constrHier(s: Set[Organisation], startOrg: String) = {
 
-//
-//  def parseLine = ???
+    def addChilds(orgSet: Set[Organisation],
+                  organisation: Organisation): Organisation = {
+
+//      if (s.contains(NotRootOrganisation(organisation.name, _))){
+
+      if (orgSet.nonEmpty) {
+        orgSet.head match {
+          case org: NotRootOrganisation =>
+            if (org.parName == organisation.name) {
+
+              val l =
+                organisation.childList.appended(addChilds(orgSet.tail, org))
+              NotRootOrganisation(org.name, org.parName, l)
+            } else {
+              addChilds(orgSet.tail, organisation)
+            }
+          case _: RootOrganisation => addChilds(orgSet.tail, organisation)
+        }
+      } else {
+        organisation
+      }
+
+    }
+    addChilds(s, RootOrganisation(startOrg))
+  }
 
   println(parseFileToSeq)
 
@@ -159,8 +147,9 @@ object ParserApp extends App {
   //lazy vals
 
   val data = trasformData(parseFileToSeq, Set());
-  val notRoots = getAllNotRootOrganisations(data)
+//  val notRoots = getAllNotRootOrganisations(data)
 
-//  constrHier(notRoots, "l0")
+  val h = constrHier(data, "l0")
+  println(h)
 
 }
