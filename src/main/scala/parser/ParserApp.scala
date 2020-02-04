@@ -125,7 +125,8 @@ object ParserApp extends App {
 
               val l =
                 organisation.childList.appended(addChilds(orgSet.tail, org))
-              NotRootOrganisation(org.name, org.parName, l)
+              addChilds(orgSet.tail, org)
+//              NotRootOrganisation(org.name, org.parName, l)
             } else {
               addChilds(orgSet.tail, organisation)
             }
