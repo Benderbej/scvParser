@@ -49,7 +49,6 @@ object ParserApp extends App {
     list
   }
 
-
   def trasformData(src: List[List[String]],
                    res: Set[Organisation]): Set[Organisation] = {
 
@@ -93,88 +92,61 @@ object ParserApp extends App {
   }
 
   def getAllRootOrganisations(orgs: Set[Organisation]) = {
-      (for (o <- orgs)
-        yield
-          o match {
-            case org: RootOrganisation => org;
-            case _                     =>
-          }).toList
+    (for (o <- orgs)
+      yield
+        o match {
+          case org: RootOrganisation => org;
+          case _                     =>
+        }).toList
   }
 
-  def getHierarchyByRootOrgName(orgs: Set[Organisation], name: String) = {
-
-    for (o <- orgs; if o.name == name; if) yield o
-
+  def getAllNotRootOrganisations(orgs: Set[Organisation]) = {
+    (for (o <- orgs)
+      yield
+        o match {
+          case org: NotRootOrganisation => org;
+          case _                        =>
+        }).toSet
   }
 
+//  def getHierarchyByRootOrgName(orgs: Set[Organisation], name: String) = {
+//
+//    for (o <- orgs; if o.name == name; if) yield o
+//
+//  }
 
-
-
-  def constrHier(s: Set[Organisation], startOrg: String) = {
-
-//  val startName = s.
-
-    def addChilds(organisation: Organisation): Organisation ={
-//      val childs: List[Organisation] = List()
-      (for (
-          o <- s
-
-      ) o match {
-        case org: NotRootOrganisation => if(org.parName == organisation.name){
-          organisation.childList.appended(addChilds(org))
-        }
-//        case org: RootOrganisation => if(org.name == startOrg)
-//        case _ => organisation
-      }).
-    }
-
-
-
-
-
-
-
-    addChilds(startOrg)
-
-
-
-  }
-
-
-
-
-
-  def getSublist(node: Organisation) = {
-
-
-
-
-
-
-
-
-
-    node match {
-
-       case org: NotRootOrganisation => {
-
-         if(org.parName == parname){
-
-         }
-
-
-
-       }
-
-
-
-
-    }
-
-
-
-
-  }
+//  def constrHier(s: Set[Organisation], startOrg: String) = {
+//
+////  val startName = s.
+//
+//    def addChilds(orgSet: Set[Organisation], organisation: Organisation): Organisation = {
+//
+////      if (s.contains(NotRootOrganisation(organisation.name, _))){
+//
+//      orgSet.head match {
+//
+//        case org: NotRootOrganisation => if (org.parName == organisation.name){
+//
+//          val l = organisation.childList.appended(addChilds(orgSet.tail, org))
+//          NotRootOrganisation(org.name, org.parName, l)
+//        } else {
+//
+//        }
+//        case org: RootOrganisation => addChilds(orgSet.tail, )
+//
+//
+//      }
+//
+//
+////      for (o <- s
+////           if o.parName == organisation.name)
+////        organisation.childList.appended(addChilds(o))
+//
+////      }
+//
+//    }
+//    addChilds(s, RootOrganisation(startOrg))
+//  }
 
 //
 //  def parseLine = ???
@@ -185,5 +157,10 @@ object ParserApp extends App {
 
   println(getAllRootOrganisations(trasformData(parseFileToSeq, Set())))
   //lazy vals
+
+  val data = trasformData(parseFileToSeq, Set());
+  val notRoots = getAllNotRootOrganisations(data)
+
+//  constrHier(notRoots, "l0")
 
 }
