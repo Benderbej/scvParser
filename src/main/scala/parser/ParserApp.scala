@@ -110,18 +110,20 @@ object ParserApp extends App {
 
 
 
-  def constrHier(s: Set[Organisation]) = {
+  def constrHier(s: Set[Organisation], startOrg: String) = {
 
+//  val startName = s.
 
-
-    def addChilds(curParName: String, organisation: Organisation): Organisation ={
-      val l: List[Organisation] = List()
+    def addChilds(organisation: Organisation): Organisation ={
+//      val childs: List[Organisation] = List()
       for (
           o <- s
       ) o match {
-        case NotRootOrganisation(name, parent) => if(parent == curParName){
-          organisation.childList.appended(addChilds(name, NotRootOrganisation(name, parent)))
+        case org: NotRootOrganisation => if(org.parName == organisation.name){
+          organisation.childList.appended(addChilds(org))
         }
+//        case org: RootOrganisation => if(org.name == startOrg)
+//        case _ => organisation
       }
     }
 
@@ -131,7 +133,7 @@ object ParserApp extends App {
 
 
 
-    addChilds()
+    addChilds(startOrg)
 
 
 
