@@ -25,57 +25,101 @@ package parser
 object ParserApp extends App {
 
   val delimiter = ","
-  val orgDelimiter = "|"
+  val orgDelimiter = "\\|"
   val orgSet: Set[Organisation] = Set()
 
   def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
 
-//  def parseFileToSeq = {
-//    val buffered = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
-//    for (line <- buffered.getLines) {
-//      val cols = line.split(",").map(_.trim)
-//      val name = s"${cols(0)}"
-//      val parent = s"${cols(1)}"
-//      val children =
-//        println(s"${cols(1)}")
-//    }
-//    buffered.close
-//  }
-
   def parseFileToSeq = {
-
-//    def addChilds(str: String, childs: List[String], curNode: Organisation) = {
-//
-//      curNode.childList match {
-//        case Nil =>
-//        case
-//      }
-//
-//
-//    }
 
     val buffered = getCSVsrc
     var list: List[List[String]] = List()
 //    val bufferedWithoutHeader = buffered.
     for (line <- buffered.getLines) {
-
       val cols: Seq[String] = line.split(delimiter).map(_.trim).toList
       cols match {
         case x :: y :: Nil => list = list.appended(x :: y :: Nil)
         case x :: y :: z :: Nil =>
-          val chList: List[String] = z.split("\\|").toList
-//          println(chList)
-//          println(chList.prepended(y).prepended(x))
+          val chList: List[String] = z.split(orgDelimiter).toList
           list = list.appended(chList.prepended(y).prepended(x))
         case _ => throw new IllegalArgumentException("invalid format")
-
       }
     }
     buffered.close
     list
   }
 
-//  def findAndAddChild
+  def trasformData(src: List[List[String]], res: Set[Organisation]): Set[
+    Organisation
+  ] = { //we know that this root exists and look for it to add new node
+
+//    def addOrganisationToSet(orgSet: Set[Organisation], parOrgName: String, chOrgName: String): Set[Organisation] = {
+////      if(orgSet.)
+//      for {
+//        org <- orgSet
+//
+//        if org.name != parOrgName
+//
+//      } println(orgName) //yield s
+//      s match {
+//        case
+//        case
+//      }
+//    }
+
+    def getSetFromChildsList(childs: List[String],
+                             parName: String): Set[Organisation] = {
+      val r = for {
+        c <- childs
+      } yield NotRootOrganisation(c, parName)
+      r.toSet
+    }
+
+    src match {
+
+      case Nil => res
+      case head :: tail => {
+
+        head match {
+          case name :: "" :: childs => { //root with childs
+//            val orgs = for {
+//              c <- childs
+//            } yield NotRootOrganisation(c, name)
+//            val orgs = getSetFromChildsList(childs, name)
+            trasformData(
+              tail,
+              res
+                .concat(getSetFromChildsList(childs, name).toSet)
+                .concat(Set(RootOrganisation(name)))
+            )
+          }
+//          case name :: "" =>
+//            trasformData(tail, res.concat(Set(RootOrganisation(name)))) //root without childs
+          case name :: parent :: Nil =>
+            trasformData(
+              tail,
+              res.concat(Set(NotRootOrganisation(name, parent)))
+            ) //node without childs
+          case name :: parent :: childs =>
+            trasformData(
+              tail,
+              res
+                .concat(Set(NotRootOrganisation(name, parent)))
+                .concat(getSetFromChildsList(childs, name))
+            ) //node with childs
+
+        }
+//        trasformData(tail, res)
+      }
+
+    }
+
+  }
+
+//  def
+//
+//
+//  def findAndAddChild = ???
 //
 //  def getAllRootOrganisations = ???
 //
@@ -84,6 +128,8 @@ object ParserApp extends App {
 //  def parseLine = ???
 
   println(parseFileToSeq)
+
+  println(trasformData(parseFileToSeq, Set()))
 
 }
 //cols match {
