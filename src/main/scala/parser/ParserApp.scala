@@ -130,16 +130,22 @@ object ParserApp extends App {
               parOrganisation match {
 
                 case pOrg: NotRootOrganisation => {
-                  NotRootOrganisation(
-                    pOrg.name,
-                    pOrg.parName,
-                    pOrg.childList.appended(addChilds(s, org))
+                  addChilds(
+                    orgSet.tail,
+                    NotRootOrganisation(
+                      pOrg.name,
+                      pOrg.parName,
+                      pOrg.childList.appended(addChilds(s, org))
+                    )
                   )
                 }
                 case pOrg: RootOrganisation => {
-                  RootOrganisation(
-                    pOrg.name,
-                    pOrg.childList.appended(addChilds(s, org))
+                  addChilds(
+                    orgSet.tail,
+                    RootOrganisation(
+                      pOrg.name,
+                      pOrg.childList.appended(addChilds(s, org))
+                    )
                   )
                 }
               }
@@ -172,3 +178,9 @@ object ParserApp extends App {
   println(h)
 
 }
+//RootOrganisation(l0,List(
+//  NotRootOrganisation(l1,l0,List()),
+//  NotRootOrganisation(l2,l0,List(
+//    NotRootOrganisation(l4,l2,List()),
+//    NotRootOrganisation(l5,l2,List()))),
+//  NotRootOrganisation(l3,l0,List())))
