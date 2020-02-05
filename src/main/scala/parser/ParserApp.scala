@@ -114,26 +114,44 @@ object ParserApp extends App {
   def constrHier(s: Set[Organisation], startOrg: String) = {
 
     def addChilds(orgSet: Set[Organisation],
-                  organisation: Organisation): Organisation = {
+                  parOrganisation: Organisation): Organisation = {
 
 //      if (s.contains(NotRootOrganisation(organisation.name, _))){
 
       if (orgSet.nonEmpty) {
         orgSet.head match {
           case org: NotRootOrganisation =>
-            if (org.parName == organisation.name) {
+            if (org.parName == parOrganisation.name) {
 
-              val l =
-                organisation.childList.appended(addChilds(orgSet.tail, org))
-              addChilds(orgSet.tail, org)
+//              val l =
+//                organisation.childList.appended(addChilds(orgSet.tail, org))
+//              addChilds(orgSet.tail, org)
+
+              parOrganisation match {
+
+                case pOrg: NotRootOrganisation => {
+                  NotRootOrganisation(
+                    pOrg.name,
+                    pOrg.parName,
+                    pOrg.childList.appended(addChilds(orgSet.tail, org))
+                  )
+                }
+                case pOrg: RootOrganisation => {
+                  RootOrganisation(
+                    pOrg.name,
+                    pOrg.childList.appended(addChilds(orgSet.tail, org))
+                  )
+                }
+              }
+
 //              NotRootOrganisation(org.name, org.parName, l)
             } else {
-              addChilds(orgSet.tail, organisation)
+              addChilds(orgSet.tail, parOrganisation)
             }
-          case _: RootOrganisation => addChilds(orgSet.tail, organisation)
+          case _: RootOrganisation => addChilds(orgSet.tail, parOrganisation)
         }
       } else {
-        organisation
+        parOrganisation
       }
 
     }
