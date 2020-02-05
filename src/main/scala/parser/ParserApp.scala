@@ -28,7 +28,7 @@ object ParserApp extends App with Usable {
   val orgDelimiter = "\\|"
   val orgSet: Set[Organisation] = Set()
 
-  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs.csv")
+  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs2.csv")
 
   def parseFileToSeq = {
 
@@ -46,7 +46,7 @@ object ParserApp extends App with Usable {
       }
     }
     buffered.close
-    list
+    list.tail
   }
 
   def trasformData(src: List[List[String]],
