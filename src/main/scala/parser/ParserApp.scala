@@ -28,13 +28,16 @@ object ParserApp extends App with Usable {
   val orgDelimiter = "\\|"
   val orgSet: Set[Organisation] = Set()
 
-  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs2.csv")
+  val src = getCSVsrc(args.head)
 
+//  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs2.csv")
+  def getCSVsrc(path: String) = io.Source.fromFile(path)
+
+  args.head
   def parseFileToSeq = {
 
-    val buffered = getCSVsrc
+    val buffered = src
     var list: List[List[String]] = List()
-//    val bufferedWithoutHeader = buffered.
     for (line <- buffered.getLines) {
       val cols: Seq[String] = line.split(delimiter).map(_.trim).toList
       cols match {
@@ -138,7 +141,7 @@ object ParserApp extends App with Usable {
             } else {
               addChilds(orgSet.tail, parOrganisation)
             }
-          case rOrg: RootOrganisation => addChilds(orgSet.tail, parOrganisation)
+          case _: RootOrganisation => addChilds(orgSet.tail, parOrganisation)
         }
       } else {
         parOrganisation
@@ -148,14 +151,17 @@ object ParserApp extends App with Usable {
     addChilds(s, RootOrganisation(startOrg))
   }
 
-  println(parseFileToSeq)
-
-  println(trasformData(parseFileToSeq, Set()))
-
-  println(getAllRootOrganisations(trasformData(parseFileToSeq, Set()), List()))
-
   val data = trasformData(parseFileToSeq, Set());
 
+  println("SET OF ORGS(NAME, ROOT INFO ONLY)")
+  println(data)
+  println()
+
+  println("SET OF ROOT ORGS")
+  println(getAllRootOrganisations(data, List()))
+  println()
+
+  println("HIERARCHY FROM ONE")
   val h = getHierarchyByRootOrgName(data, "l0")
   println(h)
 
