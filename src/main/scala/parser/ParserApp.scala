@@ -28,14 +28,11 @@ object ParserApp extends App with Usable {
   val orgDelimiter = "\\|"
   val orgSet: Set[Organisation] = Set()
 
-  val src = getCSVsrc(args.head)
-
 //  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs2.csv")
   def getCSVsrc(path: String) = io.Source.fromFile(path)
 
-  args.head
-  def parseFileToSeq = {
-
+  def parseFileToSeq(s) = {
+    val src = getCSVsrc(path)
     val buffered = src
     var list: List[List[String]] = List()
     for (line <- buffered.getLines) {
@@ -151,7 +148,7 @@ object ParserApp extends App with Usable {
     addChilds(s, RootOrganisation(startOrg))
   }
 
-  val data = trasformData(parseFileToSeq, Set());
+  val data = trasformData(parseFileToSeq(args.head), Set());
 
   println("SET OF ORGS(NAME, ROOT INFO ONLY)")
   println(data)
