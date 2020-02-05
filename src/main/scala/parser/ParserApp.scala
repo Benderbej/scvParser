@@ -1,5 +1,7 @@
 package parser
 
+import scala.io.BufferedSource
+
 /**
   * Написать без сторонних библиотек парсер файла csv(scala only), организовать хранение в памяти и реализовать следующие методы:
   *  - получить список всех корневых организаций
@@ -28,12 +30,10 @@ object ParserApp extends App with Usable {
   val orgDelimiter = "\\|"
   val orgSet: Set[Organisation] = Set()
 
-//  def getCSVsrc = io.Source.fromFile("/home/benderbej/projects/csv/orgs2.csv")
   def getCSVsrc(path: String) = io.Source.fromFile(path)
 
-  def parseFileToSeq(s) = {
-    val src = getCSVsrc(path)
-    val buffered = src
+  def parseFileToSeq(path: String) = {
+    val buffered: BufferedSource = getCSVsrc(path)
     var list: List[List[String]] = List()
     for (line <- buffered.getLines) {
       val cols: Seq[String] = line.split(delimiter).map(_.trim).toList
@@ -148,6 +148,12 @@ object ParserApp extends App with Usable {
     addChilds(s, RootOrganisation(startOrg))
   }
 
+  val p = args.head
+
+  println("CHECK FORMAT, REMOVE HEADERS, PARSE...")
+  println(parseFileToSeq(p), Set())
+  println()
+
   val data = trasformData(parseFileToSeq(args.head), Set());
 
   println("SET OF ORGS(NAME, ROOT INFO ONLY)")
@@ -163,9 +169,3 @@ object ParserApp extends App with Usable {
   println(h)
 
 }
-//RootOrganisation(l0,List(
-//  NotRootOrganisation(l1,l0,List()),
-//  NotRootOrganisation(l2,l0,List(
-//    NotRootOrganisation(l4,l2,List()),
-//    NotRootOrganisation(l5,l2,List()))),
-//  NotRootOrganisation(l3,l0,List())))
