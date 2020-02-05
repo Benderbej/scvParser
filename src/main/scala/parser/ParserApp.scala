@@ -22,7 +22,7 @@ package parser
   * n2,n1,
   * n3,n1,
   */
-object ParserApp extends App {
+object ParserApp extends App with Usable {
 
   val delimiter = ","
   val orgDelimiter = "\\|"
@@ -91,44 +91,30 @@ object ParserApp extends App {
     }
   }
 
-  def getAllRootOrganisations(orgs: Set[Organisation]) = {
-    (for (o <- orgs)
-      yield
-        o match {
-          case org: RootOrganisation => org;
-          case _                     =>
-        }).toList
+  def getAllRootOrganisations(orgs: Set[Organisation],
+                              res: List[Organisation]): List[Organisation] = {
+
+    if (orgs.nonEmpty) {
+      orgs.head match {
+        case org: RootOrganisation =>
+          getAllRootOrganisations(orgs.tail, res.prepended(org))
+        case _: NotRootOrganisation =>
+          getAllRootOrganisations(orgs.tail, res)
+      }
+    } else {
+      res
+    }
   }
 
-  def getAllNotRootOrganisations(orgs: Set[Organisation]) = {
-    (for (o <- orgs)
-      yield
-        o match {
-          case org: NotRootOrganisation => org;
-          case _                        =>
-        }).toSet
-  }
-
-//  def getHierarchyByRootOrgName(orgs: Set[Organisation], name: String) = {
-
-  def constrHier(s: Set[Organisation], startOrg: String) = {
+  def getHierarchyByRootOrgName(s: Set[Organisation], startOrg: String) = {
 
     def addChilds(orgSet: Set[Organisation],
                   parOrganisation: Organisation): Organisation = {
-
-//      if (s.contains(NotRootOrganisation(organisation.name, _))){
-
       if (orgSet.nonEmpty) {
         orgSet.head match {
           case org: NotRootOrganisation =>
             if (org.parName == parOrganisation.name) {
-
-//              val l =
-//                organisation.childList.appended(addChilds(orgSet.tail, org))
-//              addChilds(orgSet.tail, org)
-
               parOrganisation match {
-
                 case pOrg: NotRootOrganisation => {
                   addChilds(
                     orgSet.tail,
@@ -149,8 +135,6 @@ object ParserApp extends App {
                   )
                 }
               }
-
-//              NotRootOrganisation(org.name, org.parName, l)
             } else {
               addChilds(orgSet.tail, parOrganisation)
             }
@@ -168,13 +152,11 @@ object ParserApp extends App {
 
   println(trasformData(parseFileToSeq, Set()))
 
-  println(getAllRootOrganisations(trasformData(parseFileToSeq, Set())))
-  //lazy vals
+  println(getAllRootOrganisations(trasformData(parseFileToSeq, Set()), List()))
 
   val data = trasformData(parseFileToSeq, Set());
-//  val notRoots = getAllNotRootOrganisations(data)
 
-  val h = constrHier(data, "l0")
+  val h = getHierarchyByRootOrgName(data, "l0")
   println(h)
 
 }

@@ -26,15 +26,3 @@ case class NotRootOrganisation(name: String,
             childList: List[Organisation]): NotRootOrganisation =
     new NotRootOrganisation(name, parName, childList)
 }
-
-//case class NotRootOrganisationNode(name: String,
-//                               parName: String,
-//                               override val childList: List[Organisation] =
-//                               List())
-//  extends Organisation {
-//  def apply(name: String, parName: String): NotRootOrganisation =
-//    new NotRootOrganisation(name, parName)
-//
-//  def apply(name: String, parName: String, childList: List[Organisation]): NotRootOrganisation =
-//    new NotRootOrganisation(name, parName, childList)
-//}

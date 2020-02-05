@@ -2,8 +2,10 @@ package parser
 
 trait Usable {
 
-  def getAllRootOrganisations: List[Organisation]
+  def getAllRootOrganisations(orgs: Set[Organisation],
+                              res: List[Organisation]): List[Organisation]
 
-  def getHierarchyByRootOrgName
+  def getHierarchyByRootOrgName(orgs: Set[Organisation],
+                                name: String): Organisation
 
 }
